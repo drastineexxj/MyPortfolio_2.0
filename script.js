@@ -62,7 +62,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* Typing effect */
-const phrases = ['Web Developer','UI/UX Designer','Just Curious on Everything','Problem Solver'];
+const phrases = ['Just Curious on Everything','hehehe'];
 const typedEl = document.getElementById('typed');
 let pi=0, ci=0, del=false;
 
