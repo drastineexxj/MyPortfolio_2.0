@@ -148,27 +148,46 @@ lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLb(); 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 
 /* Contact form */
-document.getElementById('cform').addEventListener('submit', function(e) {
+document.getElementById('cform').addEventListener('submit', async function(e) {
   e.preventDefault();
   if (!this.checkValidity()) {
     this.reportValidity();
     return;
   }
   const btn = document.getElementById('sbtn');
+  const ok  = document.getElementById('fok');
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
   btn.disabled = true;
-  setTimeout(() => {
-    const ok = document.getElementById('fok');
+
+  try {
+    const res = await fetch(this.action, {
+      method: this.method,
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      ok.textContent = "✅ Message sent! I'll get back to you soon.";
+      ok.style.color = '#4caf50';
+      ok.style.display = 'block';
+      this.reset();
+    } else {
+      ok.textContent = '❌ Something went wrong. Please try again.';
+      ok.style.color = '#e94560';
+      ok.style.display = 'block';
+    }
+  } catch {
+    ok.textContent = '❌ Network error. Please check your connection.';
+    ok.style.color = '#e94560';
     ok.style.display = 'block';
-    this.reset();
+  } finally {
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
     btn.disabled = false;
-    setTimeout(() => ok.style.display = 'none', 5000);
-  }, 1300);
+    setTimeout(() => { ok.style.display = 'none'; }, 5000);
+  }
 });
 
 /* Footer year */
-document.getElementById('yr').textContent = new Date().getFullYear();filter
+document.getElementById('yr').textContent = new Date().getFullYear();
 
 /* Show only drawing by default on load */
 window.addEventListener('DOMContentLoaded', () => {
